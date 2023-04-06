@@ -1,35 +1,42 @@
 #!/usr/bin/python3
-"""Min operations challenge with python."""
-
-def minOperations(n: int) -> int:
-    """
-    Calculate the fewest number of operations needed to result in exactly n H characters in the file.
-    :param n: the number of H characters to produce
-    :return: the fewest number of operations needed, or 0 if n is impossible to achieve
-    """
-    if n < 1:
-        return 0
-    if n == 1:
-        return 0
-    # Find the largest factor of n
-    for i in range(n // 2, 0, -1):
-        if n % i == 0:
-            # Recursively calculate the number of operations needed
-            return minOperations(i) + (n // i)
-    # If no factors are found, n is prime and cannot be achieved
-    return 0
+'''Minimum Operations Challenge'''
 
 
-# def minOperations(n:int)->int:
-#     """Min Operations calculation."""
-#     if n < 1:
-#         return 0
-#     if n == 1:
-#         return 0
-    
-#     for i in range(n//2, 0, -1):
-#         if n % i == 0:
+def minOperations(n):
+    '''Calculated fewest number of operations.
+        Integer : if n is not achieveable, return 0
+    '''
+    pasted = 1
+    copied = 0
+    cnter = 0
+
+    while pasted < n:
+        if copied == 0:
+            copied = pasted
+            cnter += 1
+
+        if pasted == 1:
+            pasted += copied
+            cnter += 1
+            continue
+
+        remaining = n - pasted
+        if remaining < copied:
+            return 0
+
+        if remaining % pasted != 0:
+            pasted += copied
+            cnter += 1
+        else:
             
-#             return minOperations(i) + (n // i)
-    
-#     return 0
+            copied = pasted
+            
+            pasted += copied
+            
+            cnter += 2
+
+   
+    if pasted == n:
+        return cnter
+    else:
+        return 0
