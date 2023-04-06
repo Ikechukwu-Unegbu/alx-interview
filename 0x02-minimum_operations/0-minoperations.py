@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Min operations challenge with python."""
 
-def minOperations(n):
+def minOperations(n:int)->int:
     """Min Operations calculation."""
     if n < 1:
         return 0
