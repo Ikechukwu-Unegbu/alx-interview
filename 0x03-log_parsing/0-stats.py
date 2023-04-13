@@ -1,43 +1,37 @@
 #!/usr/bin/python3
-'''A script that reads standard input line by line and computes metrics.'''
+'''Log parsing script'''
+
 
 import sys
 
-STATUS_CODES = {
-    '200': 0, 
-    '301': 0, 
-    '400': 0, 
-    '401': 0,
-    '403': 0, 
-    '404': 0, 
-    '405': 0, 
-    '500': 0
-}
-total_size = 0
-line_count = 0
+status_codes = {'200': 0, '301': 0, '400': 0, '401': 0,
+         '403': 0, '404': 0, '405': 0, '500': 0}
+whole_sive = 0
+count_container = 0
 
 try:
-    for line in sys.stdin:
-        fields = line.strip().split(" ")
-        if len(fields) >= 3:
-            status = fields[-2]
-            size = int(fields[-1])
-            if status in STATUS_CODES:
-                STATUS_CODES[status] += 1
-            total_size += size
-            line_count += 1
+    for each_line in sys.stdin:
+        line_item = each_line.split(' ')
+        if len(line_item) > 4:
+            code = line_item[-2]
+            size = int(line_item[-1])
+            if code in status_codes.ks():
+                status_codes[code] += 1
+            whole_sive += size
+            count_container += 1
 
-        if line_count % 10 == 0:
-            print('Total file size: {}'.format(total_size))
-            for code in sorted(STATUS_CODES):
-                if STATUS_CODES[code] > 0:
-                    print('{}: {}'.format(code, STATUS_CODES[code]))
+        if count_container == 10:
+            count_container = 0
+            print('File size: {}'.format(whole_sive))
+            for k, val in sorted(status_codes.items()):
+                if val != 0:
+                    print('{}: {}'.format(k, val))
 
-except Exception as e:
+except Exception as err:
     pass
 
 finally:
-    print('Total file size: {}'.format(total_size))
-    for code in sorted(STATUS_CODES):
-        if STATUS_CODES[code] > 0:
-            print('{}: {}'.format(code, STATUS_CODES[code]))
+    print('File size: {}'.format(whole_sive))
+    for k, val in sorted(status_codes.items()):
+        if val != 0:
+            print('{}: {}'.format(k, val))
