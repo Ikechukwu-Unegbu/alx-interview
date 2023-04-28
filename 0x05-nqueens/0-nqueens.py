@@ -19,7 +19,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     solutions = []
-    queens = [] # format: [row, column]
+    queens = []
     row, col = 0, 0
 
     while row < n:
