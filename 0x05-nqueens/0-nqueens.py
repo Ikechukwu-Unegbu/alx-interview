@@ -1,82 +1,52 @@
 #!/usr/bin/python3
-"""
-The N queens puzzle is the challenge of placing N non-attacking queens on an N×N chessboard.
-This program solves the N queens problem for a given N value.
-Usage: nqueens N
-where N is an integer greater or equal to 4
-"""
-
 import sys
 
-def is_safe(board, row, col, N):
-    """
-    A helper function to check if the current placement of queen at (row, col) is safe or not
-    """
-    # Check the row on the left side
-    for i in range(col):
-        if board[row][i]:
-            return False
-
-    # Check upper diagonal on left side
-    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-        if board[i][j]:
-            return False
-
-    # Check lower diagonal on left side
-    for i, j in zip(range(row, N), range(col, -1, -1)):
-        if board[i][j]:
-            return False
-
-    return True
-
-
-def n_queens(board, col, N, solutions):
-    """
-    Main function that solves the N queens problem using backtracking
-    """
-    if col == N:
-        # All queens have been placed, add the solution to the list of solutions
-        solution = []
-        for i in range(N):
-            for j in range(N):
-                if board[i][j] == 1:
-                    solution.append([i, j])
-        solutions.append(solution)
-        return
-
-    for row in range(N):
-        if is_safe(board, row, col, N):
-            # Place the queen at the current position
-            board[row][col] = 1
-
-            # Recur to place rest of the queens
-            n_queens(board, col+1, N, solutions)
-
-            # Backtrack and remove the queen from the current position
-            board[row][col] = 0
-
-
-if __name__ == '__main__':
-    # Check if the user has entered a valid value for N
+if __name__ == "__main__":
+    # Check number of arguments
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
+
+    # Parse N from command line argument
     try:
-        N = int(sys.argv[1])
+        n = int(sys.argv[1])
     except ValueError:
         print("N must be a number")
         sys.exit(1)
-    if N < 4:
+
+    # Check if N is valid
+    if n < 4:
         print("N must be at least 4")
         sys.exit(1)
 
-    # Initialize the board with all zeros
-    board = [[0 for x in range(N)] for y in range(N)]
+    # Initialize the chess board
+    board = [[0 for j in range(n)] for i in range(n)]
 
-    # Solve the N queens problem
+    # Initialize solution list
     solutions = []
-    n_queens(board, 0, N, solutions)
 
-    # Print the solutions
-    for solution in solutions:
-        print(solution)
+    # Iterate over rows
+    for i in range(n):
+        # Iterate over columns
+        for j in range(n):
+            # Place queen if it's safe
+            if all(board[k][j] == 0 for k in range(i)) \
+               and all(board[i][k] == 0 for k in range(j)) \
+               and all(board[i-k][j-k] == 0 for k in range(min(i,j)+1)) \
+               and all(board[i-k][j+k] == 0 for k in range(min(i,n-j))):
+                board[i][j] = 1
+
+                # Check if it's a solution
+                if i == n-1:
+                    solutions.append([[i,j] for i,j in enumerate(board[-1]) if j == 1])
+                else:
+                    break
+            else:
+                # Remove previous queens and backtrack
+                for k in range(i+1):
+                    board[k][j-1] = 0
+                if j == 0:
+                    print(solutions)
+                    sys.exit(0)
+                j -= 2
+                break
